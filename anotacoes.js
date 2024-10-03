@@ -209,3 +209,24 @@ function verificaPalavrasDuplicadas(texto) {
 // E, por último, o JavaScript está fazendo diferenciação entre maiúsculas e minúsculas. Então, "Um" maiúsculo ficou separado de "um" minúsculo - cada um com a sua contagem.
 
 // Então, note como existe muito a se refinar nessa primeira implementação.
+
+
+// Agora, em vez de src/index, usamos src/cli, pois mudamos o arquivo cli.js, para ser agora nosso ponto de entrada.
+
+// O padrão do JavaScript é trabalhar com vários arquivos especializados e com poucas funções dentro deles, exportando e importando esses arquivos entre si. Importamos essas funções da mesma forma que importamos nossa função de erro e a biblioteca fs.
+
+// Até agora, temos usado require para importar o que queríamos, como módulos e funções, e module.exports para exportar. Essa é a forma "nativa" do Node.js de lidar com a importação e exportação de módulos, nesse processo de organizar nosso código de forma compartimentada. No entanto, essa forma é aceita apenas no Node.js.
+
+// O JavaScript tem outra forma de lidar com a importação e exportação que é aceita tanto no Node.js mais moderno, como na versão 20 que estamos usando, quanto nos navegadores. Essa forma mais moderna e amplamente utilizada é usando import e export.
+
+// Configuração no package.json: Para trabalhar com a versão mais moderna de importação e exportação de módulos, precisamos adotar um certo processo.
+
+// No terminal, na pasta raiz do projeto (e não dentro de src), vamos executar o seguinte comando: npm init –y
+
+// O terminal informará que escreveu um arquivo chamado package.json na pasta do projeto.
+
+// O arquivo package.json é um arquivo manifesto. Ele contém tudo que a aplicação precisa para executar, incluindo todas as dependências, bibliotecas usadas, scripts, detalhes de configuração e assim por diante. Este é o arquivo principal e, normalmente, o primeiro que verificamos quando recebemos um projeto em Node, para entender o que o projeto faz e usa. Precisamos desse arquivo agora para fazer uma configuração específica necessária para usar a importação e exportação moderna de módulos.
+
+// Dentro do package.json, em qualquer ponto do objeto declarado no arquivo, como logo após a propriedade main, vamos adicionar a seguinte informação: "type": "module". Isso informa ao Node que esse projeto utiliza a forma moderna de importação e exportação de arquivos. Esse é o primeiro procedimento necessário para a importação e exportação de arquivos funcionar.
+
+// Abordamos exemplos de duas formas de fazer a exportação, com export default e apenas export, mas existem mais formas de trabalhar com módulos em JavaScript.
