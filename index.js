@@ -5,11 +5,14 @@ const link = caminhoArquivo[2];
 
 
 fs.readFile(link, 'utf-8', (erro, texto) => {
-    if(erro) {
-        console.log('Qual é o erro?', erro);
-        return;
+    try {
+        if(erro) throw erro
+        contaPalavras(texto);
+    } catch(erro) {
+        if(erro.code === 'ENOENT') console.log('Erro que se esperava');
+        else console.log('Outro erro');
+        // o que fazer com o erro?
     }
-    contaPalavras(texto);
 });
 
 function contaPalavras(texto) {
@@ -28,21 +31,9 @@ function extraiParagrafos(texto) {
 const stringCaminhoTexto = '../arquivos/texto-web.txt';
 console.log(stringCaminhoTexto);
 
-
-// function quebraEmParagrafos(texto) {
-//     const paragrafos = texto.toLowerCase().split('\n');
-//     const contagem = paragrafos.flatMap((paragrafo) => {
-//         if(!paragrafo) return []; 
-//         return verificaPalavrasDuplicadas(paragrafo);
-//     })
-//     console.log(contagem);
-// }
-
-
 function limpaPalavras(palavra) {
     return palavra.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
 }
-
 
 function verificaPalavrasDuplicadas(texto) {
     const listaPalavras = texto.split(' ');
