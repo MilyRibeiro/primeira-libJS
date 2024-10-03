@@ -24,8 +24,35 @@ const link = caminhoArquivo[2];
 // console.log(link);
 
 fs.readFile(link, 'utf-8', (erro, texto) => {
-    console.log(texto);
+    try {
+        contaPalavras(texto);
+    } catch(erro) {
+        // o que fazer com o erro?
+    }
+    // if(erro) {
+    //     console.log('Qual é o erro?', erro);
+    //     return;
+    // }
 });
+
+// O terminal não acusou o erro, que é diferente de não dar erro, mas em compensação também não trouxe o nosso array de objetos. Então, vamos voltar no nosso código e ver o que aconteceu.
+
+// Esse bloco try-catch funciona da seguinte forma: Dentro do try, colocamos todo o código onde é possível que ocorra um erro. Teoricamente, é o código que queremos que dê certo, só que se acontecer alguma coisa que não está certa, se ocorrer qualquer tipo de erro, queremos monitorar o código que está dentro desse bloco, para que, caso algum erro ocorra durante a execução, por exemplo, de contarPalavras, esse erro seja capturado pelo bloco catch. Try significa "tentar" em inglês e Catch, pegar.
+
+// Por que não aconteceu nada no terminal? Porque causamos um erro de propósito, esse erro foi capturado, porque ele estava dentro do bloco try, então ele foi interceptado. O try pegou esse erro, que é esse conjunto de dados que, no momento, não sabemos muito bem o que tem dentro, e jogou para ser capturado pelo catch. Só que o nosso catch não tem nada dentro dele, o nosso catch só tem um comentário. E aí, deu erro, o erro não foi mandado para frente, ninguém fez nada com ele, e ficou por isso mesmo.
+
+function contaPalavras(texto) {
+    const paragrafos = extraiParagrafos(texto);
+    const contagem = paragrafos.flatMap((paragrafo) => {
+        if(!paragrafo) return []; 
+        return verificaPalavrasDuplicadas(paragrafo);
+    })
+    console.log(contagem);
+}
+
+function extraiParagrafos(texto) {
+    return texto.toLowerCase().split('\n');
+}
 
 const stringCaminhoTexto = '../arquivos/texto-web.txt';
 console.log(stringCaminhoTexto);
@@ -52,6 +79,15 @@ function quebraEmParagrafos(texto) {
     // console.log(paragrafos);
     console.log(contagem);
 }
+
+// function quebraEmParagrafos(texto) {
+//     const paragrafos = texto.toLowerCase().split('\n');
+//     const contagem = paragrafos.flatMap((paragrafo) => {
+//         if(!paragrafo) return []; 
+//         return verificaPalavrasDuplicadas(paragrafo);
+//     })
+//     console.log(contagem);
+// }
 
 // [1, 2[3, 4]]
 // [1, 2, 3, 4]
