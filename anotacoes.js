@@ -51,14 +51,15 @@ const link = caminhoArquivo[2];
 
 fs.readFile(link, 'utf-8', (erro, texto) => {
     try {
-        if(erro) throw erro
-        contaPalavras(texto);
         if (erro) throw erro;
+        contaPalavras(texto);
     } catch (erro) {
-        if (erro.code === 'ENOENT') console.log('erro que esperava');
-        else console.log('outro erro');
+        trataErros(erro);
+        // if(erro.code === 'ENOENT') console.log('Erro que se esperava');
+        // else console.log('Outro erro');
     }
-})
+});
+
 
 // O que estamos fazendo aqui? Perceba que o erro é propagado entre as funções. Então, ele começa num ponto, vai sendo lançado até que algum lugar pega esse erro. É isso que normalmente fazemos quando trabalhamos com bloco try-catch. Então, esse erro está sendo pego dentro do nosso if (erro), que está dentro do try, e essa palavra throw está lançando esse erro para frente.
 
@@ -75,6 +76,16 @@ fs.readFile(link, 'utf-8', (erro, texto) => {
 // Não precisamos dar throw somente em objetos do tipo erro, mas qualquer tipo de dado pode ser lançado, mas não é muito comum fazermos isso. O throw, normalmente, é usado para finalizar uma função, jogando para fora dela alguma informação sobre algo que deu errado na execução dessa função, ou que propagou de outras partes do código até ser lançado e capturado nessa parte do código.
 
 // E para que um erro lançado não simplesmente interrompa uma função, interrompa o funcionamento do nosso programa, usamos o try-catch, para que o erro possa ser capturado e tratado de forma correta, sem que ele interrompa necessariamente o funcionamento da nossa aplicação. Isso porque, normalmente, exceções que não são capturadas por nenhum catch, elas vão se propagando pela stack, elas vão indo de função em função, de módulo em módulo, até que acabam interrompendo o funcionamento do programa de uma forma não esperada, com um erro que pode ser que não seja o erro que esperamos receber.
+
+// Agora voltou a dar erro, porque não está mais aparecendo aquela mensagem que estava aparecendo no console. Porém, agora o erro está identificado. Ele dá uma mensagem, ele diz no topo do erro onde esse erro foi identificado. Dentro de funcoesErros foi de onde ele foi lançado. Erro, arquivo não encontrado". E aí ele foi bater lá dentro de trataErro.
+
+// Mas, não seria melhor quando estava mostrando só a mensagem, mais nada? Existem casos onde realmente vamos querer só dar uma mensagem. Porém, em alguns casos, quando esperamos erros, queremos receber o objeto de erro mais completo para entender com mais detalhes onde ocorreu esse erro.
+
+// Por quê? Porque todo objeto de erro traz junto com ele esse conjunto de informações que chamamos de STACK TRACE (rastreamento de pilha), que é um registro de todas as partes do código que são invocadas, por onde passa o nosso código para ser executado. Se não temos esse stack trace, sabemos que o erro ocorreu, mas ele não nos diz onde esse erro ocorreu. E com o stack trace, ele vai dizer por ordem, por onde o erro passou.
+
+// Então, o primeiro ponto é em tratarErros, porque foi a função que foi chamada quando o erro bateu lá no fs.readFile. Porém, embaixo, ele já mostra para nós o arquivo anterior, por onde esse erro passou antes, e é o index.js na LINHA 12. Isso quer dizer que o arquivo index.js na linha 12 tem alguma coisa e foi dali que se originou o erro. Então, a partir do stack trace, ele mostra o caminho completo, inclusive os arquivos lá no Node, nas bibliotecas onde vão ser chamadas, mas ele mostra também o caminho dentro da nossa aplicação por onde o erro passou. Isso pode ser importante.
+
+// onde temos que capturar erros: Onde colocamos o try-catch? Porque não colocamos em tudo. Pense que não precisamos capturar todos os erros em todos os lugares. Por exemplo, partes do código que são apenas lógicas de programação com métodos de array são pontos de falha que podem não ser tão críticos. E você NÃO vai querer colocar try-catch em todo o seu código. Você vai colocar nesses pontos onde mapeamos que podem ocorrer erros. Por exemplo, onde precisamos pegar um arquivo externo. E se é um PONTO CRÍTICO DE FALHA, vamos colocar um try-catch aqui. Mas isso vai se aprimorando com a prática.
 
 function contaPalavras(texto) {
     const paragrafos = extraiParagrafos(texto);

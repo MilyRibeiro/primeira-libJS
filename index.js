@@ -1,19 +1,17 @@
 const fs = require('fs'); // fs é uma biblioteca importante do Node.js, que permite diversos tipos de interação de uma aplicação com o sistema de arquivos do computador.
+const trataErros = require('./erros/funcoesErro');
 
 const caminhoArquivo = process.argv;
 const link = caminhoArquivo[2];
 
-
 fs.readFile(link, 'utf-8', (erro, texto) => {
-    contaPalavras(texto);
     try {
-        // if(erro) throw erro
-    } catch(erro) {
-        if(erro.code === 'ENOENT') console.log('Erro que se esperava');
-        else console.log('Outro erro');
-        // o que fazer com o erro?
+        if (erro) throw erro;
+        contaPalavras(texto);
+    } catch (erro) {
+        console.log(trataErros(erro));   // Arquivo não encontrado
     }
-});
+})
 
 function contaPalavras(texto) {
     const paragrafos = extraiParagrafos(texto);
