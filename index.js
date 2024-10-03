@@ -4,8 +4,10 @@ export function contaPalavras(texto) {
         if(!paragrafo) return []; 
         return verificaPalavrasDuplicadas(paragrafo);
     })
-    console.log(contagem);
+    // console.log(contagem);
+    return contagem;
 }
+// Para essa função realmente enviar os dados para fora, precisamos fazer com que ela retorne os dados que estão na variável contagem, usando a palavra-chave return. Afinal, o console.log só exibe os dados, mas não os retira da função.
 
 function extraiParagrafos(texto) {
     return texto.toLowerCase().split('\n');
