@@ -5,9 +5,9 @@ const link = caminhoArquivo[2];
 
 
 fs.readFile(link, 'utf-8', (erro, texto) => {
+    contaPalavras(texto);
     try {
-        if(erro) throw erro
-        contaPalavras(texto);
+        // if(erro) throw erro
     } catch(erro) {
         if(erro.code === 'ENOENT') console.log('Erro que se esperava');
         else console.log('Outro erro');
