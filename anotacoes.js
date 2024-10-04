@@ -230,3 +230,40 @@ function verificaPalavrasDuplicadas(texto) {
 // Dentro do package.json, em qualquer ponto do objeto declarado no arquivo, como logo após a propriedade main, vamos adicionar a seguinte informação: "type": "module". Isso informa ao Node que esse projeto utiliza a forma moderna de importação e exportação de arquivos. Esse é o primeiro procedimento necessário para a importação e exportação de arquivos funcionar.
 
 // Abordamos exemplos de duas formas de fazer a exportação, com export default e apenas export, mas existem mais formas de trabalhar com módulos em JavaScript.
+
+
+async function criaESalvaArquivo(listaPalavras, endereco) {
+    const arquivoNovo = `${endereco}/resultado.txt`;
+    const textoPalavras = JSON.stringify(listaPalavras);
+    try {
+        await fs.promises.writeFile(arquivoNovo, textoPalavras);
+        console.log('Arquivo criado');
+    } catch(erro) {
+        throw erro;
+    }
+}
+
+// Agora, as funções que realizam a lógica do nosso contador estão separadas e localizadas no index.js.
+
+// WriteFile é um método que não retorna nada, porque ele simplesmente escreve um arquivo, ele não tem dado para retornar. 
+// Recebemos a mensagem "Arquivo criado" no terminal, o que nos indica que deu tudo certo! De fato, o arquivo resultado.txt foi criado! Mas, se abrirmos o arquivo resultado.txt, teremos literalmente o array de objetos transformado em uma string. Isso foi o que pedimos, mas não funciona muito bem para quem vai usar o nosso contador, porque está em um formato muito difícil de ler.
+
+// Ou seja, o que pedimos deu certo, pois estamos recebendo um .txt de resultado, mas precisamos formatar melhor essa saída.
+
+// "Promessa" é o termo usado pelo JavaScript para um tipo de objeto dessa linguagem, feito para encapsular e lidar com essas operações assíncronas.
+
+// O objeto promise representa os possíveis estados de uma promessa. Mas quais são os estados de uma promessa?
+
+// Lembrando do WhatsApp, uma mensagem fica pendente enquanto não obtém um fechamento, um retorno de resposta. Ou seja, enquanto mandamos todas as nossas mensagens no WhatsApp e não temos a resposta da pessoa para quem mandamos, podemos dizer que essa promessa está pendente (pending), pois não sabemos ainda o que vai ser dela. Ela pode se cumprir ou não.
+
+// Um dos estados de resolução da promessa, depois que ela deixa de ser pendente, é estar resolvida (fulfilled), concluída com sucesso.
+
+// No caso de código, por exemplo: se fizemos uma requisição de determinados dados para um banco de dados, como dados de clientes ou produtos, a promessa resolvida se dá quando esses dados chegam para o nosso computador, cliente, e são resolvidas com sucesso.
+
+// O terceiro caso se dá quando essa comunicação falha de alguma forma, afinal, são pontos críticos: temos que conectar com o banco, pedir os dados da forma certa, e precisamos ter acesso a eles. Esse é o estado de promessa rejeitada (rejected). Ou seja, é o caso de erro - como erro na conexão com o banco, na nossa requisição, etc.
+
+// Então, uma promessa pode estar:
+
+// Pendente, esperando resolução, esperando o processamento acontecer;
+// Resolvida, quando ela se resolve com sucesso e temos os dados;
+// Rejeitada, quando não se resolve, resultando no caso de erro.
