@@ -232,16 +232,16 @@ function verificaPalavrasDuplicadas(texto) {
 // Abordamos exemplos de duas formas de fazer a exportação, com export default e apenas export, mas existem mais formas de trabalhar com módulos em JavaScript.
 
 
-async function criaESalvaArquivo(listaPalavras, endereco) {
-    const arquivoNovo = `${endereco}/resultado.txt`;
-    const textoPalavras = JSON.stringify(listaPalavras);
-    try {
-        await fs.promises.writeFile(arquivoNovo, textoPalavras);
-        console.log('Arquivo criado');
-    } catch(erro) {
-        throw erro;
-    }
-}
+// async function criaESalvaArquivo(listaPalavras, endereco) {
+//     const arquivoNovo = `${endereco}/resultado.txt`;
+//     const textoPalavras = JSON.stringify(listaPalavras);
+//     try {
+//         await fs.promises.writeFile(arquivoNovo, textoPalavras);
+//         console.log('Arquivo criado');
+//     } catch(erro) {
+//         throw erro;
+//     }
+// }
 
 // Agora, as funções que realizam a lógica do nosso contador estão separadas e localizadas no index.js.
 
@@ -267,3 +267,57 @@ async function criaESalvaArquivo(listaPalavras, endereco) {
 // Pendente, esperando resolução, esperando o processamento acontecer;
 // Resolvida, quando ela se resolve com sucesso e temos os dados;
 // Rejeitada, quando não se resolve, resultando no caso de erro.
+
+// Para que a função criaESalvaArquivo processasse corretamente e retornasse um arquivo txt, utilizamos duas palavras-chave: async e await.
+
+// Essa dupla de termos são utilizadas para indicar ao interpretador que existem operações assíncronas nesse trecho de código.
+
+// Mas, como utilizamos async e await? O async é sempre adicionado na declaração da função. Então, na função criaESalvaArquivo, adicionamos async antes.
+
+// Já o await é adicionado na linha onde executaremos o método assíncrono, que no caso é o fs.promises.readFile(). Adicionamos await antes disso.
+
+// Mencionamos anteriormente que writeFile é uma exceção, porque não retorna nenhum dado. Mas, caso estivéssemos retornando algum dado, teríamos que ter uma constante retorno para salvar esses dados.
+
+// Nesse exemplo, o await estaria à direita do atribuidor de variável, ou seja, à direita do igual antes da chamada da função. No caso, não precisamos dessa constante retorno, porque writeFile não retorna nada.
+
+// Para entendermos promessas em JavaScript, existe o objeto promise. A documentação do MDN diz que ele representa a eventual conclusão ou falha de uma operação assíncrona em seu valor resultante.
+
+// Isso significa que métodos assíncronos, como o writeFile, não retornam dados finais. Sempre nos perguntamos o que a função retorna, podendo ser um array, um objeto, um booleano.
+
+// Métodos assíncronos baseados em promessa retornam objetos promise como esse. Não conseguimos abrir esse objeto e tirar os dados de dentro dele, porque é uma representação de uma conclusão que ainda não sabemos se vai acontecer.
+
+// Nesse caso, o próprio .then() é a função responsável por fazer a conclusão dessa promessa, como rejeitado ou com sucesso. É dentro dessa função callback do .then() que colocamos o processamento feito com o resultado da promessa.
+
+// Então, se sua promessa retorna um JSON com vários dados, é dentro do .then() que dizemos o que faremos com esse JSON. E ele é recebido no parâmetro, então, nos parênteses de .then() passamos json.
+
+// No caso do writeFile, ele não retorna nada, então o .then() não precisa processar nada. Podemos colocar apenas o console.log() dizendo arquivo criado.
+
+
+function criaESalvaArquivo(listaPalavras, endereco) {
+    const arquivoNovo = `${endereco}/resultado.txt`;
+    const textoPalavras = JSON.stringify(listaPalavras);
+    fs.promises.writeFile(arquivoNovo, textoPalavras)
+    .then(() => {
+        console.log('Arquivo criado com sucesso');
+    }).catch((erro) => {
+        throw erro
+    }).finally(() => console.log('Operação finalizada'));
+}
+
+// Entendendo a diferença entre .then() e assync await: A diferença principal é que a sintaxe do async await é mais simplificada, o chamamos inclusive de açúcar sintático. É quando temos uma forma de fazer uma coisa, mas criamos uma camada em cima dela para simplificar a aplicação.
+
+// Então é mais fácil de aplicar em códigos para transformar código síncrono em código assíncrono. Se tiramos o async await da função, ela fica uma função JavaScript normal igual várias outras que escrevemos.
+
+// Ao contrário do .then(), que tem uma sintaxe própria, esse método de encadeamento de métodos, pode fazer com que o código fique um pouco mais complexo de se escrever e de se entender. Então, ambas as formas funcionam, elas têm outras particularidades. É importante praticar bastante com todos os casos, porém, basicamente, a diferença principal é essa.
+
+// Preferimos pessoalmente usar o async await justamente porque ele torna a leitura e a escrita do código mais fluida do que o .then().
+
+// O .then() é mais antigo, então é muito mais fácil encontrar exemplos de código com o .then(), mas agora que sabemos em que parte do código está acontecendo o que, conseguimos fazer essa transposição e usar o açúcar sintático do async await em cima do .then().
+
+// E o catchque removemos do try catch, como fazemos caso a promessa seja rejeitada? Usaremos outra forma do catch, que é outra função encadeada.
+
+// Na linha abaixo, passamos .catch(), que também é uma função callback. Então, passamos outros parênteses e dentro erro seguido da arrow function => {}. Nas chaves, podemos apenas lançar o erro que será recebido por parâmetro throw erro.
+
+// Além disso, o .then() também tem outra fase nessa resolução, que é o .finally(). Abaixo, passamos .finally() que é onde colocamos código que queremos que seja executado, independente de dar sucesso ou falha.
+
+// Então, independente de conseguir os dados ou de receber uma promessa rejeitada, o .finally() sempre acontece. Ele é muito útil, por exemplo, para fechar conexões com bancos de dados. Como esse não é o nosso caso, nos parênteses chamamos uma função callback () => {}, sem parâmetro nenhum, e passamos console.log('operação finalizada').
