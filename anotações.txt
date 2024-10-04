@@ -1,4 +1,4 @@
-// const caminhoArquivo = require('./arquivos/texto-web.txt');
+/ const caminhoArquivo = require('./arquivos/texto-web.txt');
 // Contudo, deparamo-nos imediatamente com um erro. Parece que já começamos com uma anomalia desde o início.
 // Error: Cannot find module './arquivos/texto-web.txt'
 
@@ -14,7 +14,15 @@
 
 // Vamos começar abordando o segundo problema para tornar nossa vida mais fácil, permitindo que possamos receber qualquer arquivo. Para isso, faremos o seguinte: removeremos o require() do caminhoArquivo, já que não está funcionando como esperado, e substituiremos por outra instrução, que será process.argv.
 
+// CLI é a sigla para Command Line Interface (Interface de Linha de Comando)
+// Agora, podemos refatorar nosso código para deixá-lo mais moderno. No arquivo cli.js, onde temos importações, vamos substituir const fs = require('fs') por import fs from 'fs'. Faremos o mesmo com trataErros, substituindo const trataErros = require('./erros/funcoesErro') por import trataErros from './erros/funcoesErro.js'. Note que, ao usar esse formato, precisamos incluir a extensão do arquivo na importação.
 
+import fs from 'fs';     // const fs = require('fs'); 
+import path from 'path'; // instalar uma biblioteca extra do próprio Node. O path é uma biblioteca também muito importante, porque o Node a usa para fazer gerenciamento de caminhos relativos e absolutos de todos os arquivos que são referenciados dentro do programa. Então, a biblioteca commander precisa resolver os arquivos que vamos mandar internamente antes de utilizar esses caminhos. 
+import trataErros from './erros/funcoesErro.js';       // const trataErros = require('./erros/funcoesErro');
+import { contaPalavras } from './index.js';
+import { montaSaidaArquivo } from './helpers.js';
+import { Command } from 'commander';
 const fs = require('fs'); // fs é uma biblioteca importante do Node.js, que permite diversos tipos de interação de uma aplicação com o sistema de arquivos do computador.
 
 const caminhoArquivo = process.argv;
@@ -321,3 +329,35 @@ function criaESalvaArquivo(listaPalavras, endereco) {
 // Além disso, o .then() também tem outra fase nessa resolução, que é o .finally(). Abaixo, passamos .finally() que é onde colocamos código que queremos que seja executado, independente de dar sucesso ou falha.
 
 // Então, independente de conseguir os dados ou de receber uma promessa rejeitada, o .finally() sempre acontece. Ele é muito útil, por exemplo, para fechar conexões com bancos de dados. Como esse não é o nosso caso, nos parênteses chamamos uma função callback () => {}, sem parâmetro nenhum, e passamos console.log('operação finalizada').
+
+
+// Implementando libs externas: Para começar, vamos criar uma function chamada processaArquivo().
+
+// E o que é necessário para funcionar? Dos mesmos parâmetros que o readFile precisava anteriormente. O caminho do texto, que chamaremos de texto, e o caminho onde será salvo, que chamaremos de destino, para ficar igual ao que colocamos no commander.
+
+// Dentro dessa função, vamos colocar o fs.readFile(), usando "Alt + Seta para cima". E, agora, corrigiremos os parâmetros. Por enquanto, o readFile() está recebendo o link, que agora será texto. É o link para receber o texto .txt.
+
+// E, dentro do readFile(), já estamos chamando contaPalavras(texto) e criaESalvaArquivo(resultado, endereco).
+
+// Devemos trocar os parâmetros de criaESalvaArquivos(), pois agora ele não recebe mais endereco, ele tem que receber destino - que era o que vinha da linha de comando, onde queríamos salvar o novo arquivo com os resultados.
+function processaArquivo(texto, destino) {
+    fs.readFile(link, 'utf-8', (erro, texto) => {
+        try {
+            if (erro) throw erro;
+            const resultado = contaPalavras(texto);
+            criaESalvaArquivo(resultado, destino)    //endereco;
+        } catch (erro) {
+            console.log(trataErros(erro));   // Arquivo não encontrado
+        }
+    })    
+}
+
+// Antes de executar processaArquivo(), pode ser que você tenha se perguntado: writeFile é uma função assíncrona e readFile é síncrona, uma vez que usamos .promises no writeFile, mas não no readFile? Não.
+
+// O readFile também é uma função assíncrona do Node.
+
+// Se você quisesse fazer esses processos de forma síncrona, também poderia colocar um Sync no final do nome do método, mas só utilizamos esse tipo de processamento de forma síncrona em contextos muito específicos. Normalmente queremos que isso seja assíncrono mesmo.
+
+// A diferença é que fs.readFile() utiliza outra forma de lidar com o código assíncrono no JavaScript, que é utilizando callbacks.
+
+// Então, as funções callbacks não são apenas funções que colocamos dentro de outras. No caso de código assíncrono, ela também é utilizada para resolver internamente esse código. Não costumamos utilizar callbacks mais. A forma mais moderna é utilizar promises, até porque callbacks podem ficar mais complexos de se ler do que promessas.
