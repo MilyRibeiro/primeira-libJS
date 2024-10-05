@@ -25,8 +25,42 @@ import { montaSaidaArquivo } from './helpers.js';
 import { Command } from 'commander';
 const fs = require('fs'); // fs é uma biblioteca importante do Node.js, que permite diversos tipos de interação de uma aplicação com o sistema de arquivos do computador.
 
-const caminhoArquivo = process.argv;
+const program = new Command();
+
+program
+.version('0.0.1')
+.option('-t, --texto <string>', 'caminho do texto a ser processado')
+.option('-d, --destino <string>', 'caminho da pasta onde salvar o arquivo de resultados')
+.action((options) => {
+    const { texto, destino } = options;  // Chamamos a sintaxe de envolver duas variáveis em chaves de desestruturação, é uma ferramenta do JavaScript.
+
+    if(!texto || !destino) {
+        console.error('Erro: favor inserir caminho de origem e destino');
+        program.help();
+        return;
+    }
+
+    const caminhoTexto = path.resolve(texto);
+    const caminhoDestino = path.resolve(destino);
+
+    try {
+        processaArquivo(caminhoTexto, caminhoDestino);
+        console.log('Texto processado com sucesso');
+    } catch(erro) {
+        console.log('Ocorreu um erro no processamento', erro);
+    }
+})
+
+program.parse();    
+
+// E essa última parte é muito importante. Para essa biblioteca commander funcionar, não podemos esquecer de, depois que chamamos todos os métodos dela nesse encadeamento, chamar outro método específico, que é program.parse(). É um método que não recebe nenhum parâmetro, só abre e fecha parênteses. Parse significa converter, pois vai pegar tudo isso e converter para que consigamos utilizar na linha de comando.
+
+const caminhoArquivo = process.argv; 
 const link = caminhoArquivo[2];
+const endereco = caminhoArquivo[3];
+// Podemos deletar essas três constantes (caminhoArquivo, link e endereco) que estavam recebendo via process.argv e criando aquele array. Não precisamos mais delas.
+
+// O que estamos fazendo com o commander? Estamos assinalando cada um desses comandos com uma flag, chamamos isso de option ou flag. Tanto faz usar -t e -d ou --texto e --destino, basta colocá-los na frente da informação. Irá funcionar da mesma forma, porque colocamos as duas formas em option(). Agora, nosso comando no terminal vai ficar da seguinte forma: node src/cli.js -t, espaço, seguido da informação de onde está vindo o texto. Depois dela, -d de destino, espaço e a informação do destino. Dessa forma, estamos usando flags para identificar o argumento que está chegando. E não faz diferença a ordem deles, porque eles vão estar identificados pela flag.
 
 // console.log(caminhoArquivo[2]);
 // console.log(link);
