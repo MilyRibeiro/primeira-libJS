@@ -395,3 +395,13 @@ function processaArquivo(texto, destino) {
 // A diferença é que fs.readFile() utiliza outra forma de lidar com o código assíncrono no JavaScript, que é utilizando callbacks.
 
 // Então, as funções callbacks não são apenas funções que colocamos dentro de outras. No caso de código assíncrono, ela também é utilizada para resolver internamente esse código. Não costumamos utilizar callbacks mais. A forma mais moderna é utilizar promises, até porque callbacks podem ficar mais complexos de se ler do que promessas.
+
+// Sempre que vamos trabalhar com um projeto em Node.js do zero, uma das primeiras coisas que fazemos é criar um arquivo package.json utilizando o comando npm init; assim como para todas as instalações de libs externas utilizamos o comando npm install <nome do pacote>. O NPM é o que chamamos de gerenciador de pacotes, sendo NPM o acrônimo de Node Package Manager ou Gerenciador de Pacotes do Node.
+
+// Gerenciadores de pacotes são repositórios de código aberto nos quais devs disponibilizam soluções para o uso da comunidade. Estas soluções são programas que outras pessoas desenvolveram e que utilizamos para ganhar tempo no desenvolvimento de nosso próprio código, e vão desde libs (bibliotecas) pequenas e específicas até frameworks com vários recursos prontos. Pacote é como chamamos o conjunto do código que determinada lib ou framework utiliza para executar.
+
+// Estes pacotes de código podem ser instalados localmente, estando disponíveis somente para o projeto no qual foi instalado através da pasta node_modules, e globalmente, sendo instalados em um diretório geral do NPM e ficando disponíveis para todos os projetos em seu computador, sem a necessidade de instalar separadamente em cada projeto.
+
+// Na maior parte das vezes, você vai utilizar a opção local, com os comandos npm install <nome do pacote>, pois fica mais fácil gerenciar a versão das libs que utilizamos e é muito comum que um pacote que instalamos “puxe” um ou vários outros pacotes auxiliares que ele precisa para funcionar internamente, o que pode acabar “inflando” a pasta global do node_modules. O ideal é não poluir este diretório global com libs que em alguns casos serão utilizadas em somente um projeto.
+
+// Já algumas libs e frameworks mais complexas vão solicitar que a instalação seja feita globalmente para funcionar. Sempre vale a pena consultar a documentação de cada uma - normalmente a documentação da ferramenta vai informar se isso é necessário.
